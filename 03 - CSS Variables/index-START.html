@@ -22,6 +22,22 @@
 
   <style>
 
+    :root {
+      --spacing: 10px;
+      --blur: 10px;
+      --base: #2adbe7;
+    }
+
+    img {
+      padding: var(--spacing);
+      background-color: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
     /*
       misc styles, nothing to do with CSS variables
     */
@@ -45,6 +61,16 @@
   </style>
 
   <script>
+    function changeValue(event) {
+      const unit = event.currentTarget.dataset.sizing || '';
+
+      document.documentElement.style.setProperty(`--${event.currentTarget.name}`, event.currentTarget.value + unit);
+    }
+
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach((input) => input.addEventListener('change', changeValue));
+    inputs.forEach((input) => input.addEventListener('mouvemove', changeValue));
+
   </script>
 
 </body>
