@@ -17,6 +17,49 @@
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+const textInput = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions');
+const cities = [];
+
+// recupérer les lettre en input
+// les comparer avec le nom de ville ou state
+// display les matches avec nom de ville, state et population
+// highlight les match
+
+fetch(endpoint)
+  .then(item => item.json())
+  .then(data => {
+    cities.push(...data);
+  });
+
+// console.log(cities);
+
+function compareMatch(wordToMatch, cities) {
+  return cities.filter(location => {
+    const regex = new RegExp(wordToMatch, 'gi');
+    return location.city.match(regex) || location.state.match(regex);
+  });
+};
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function displayMatches() {
+  const results = compareMatch(this.value, cities);
+  const html = results.map(result => {
+    const regex = new RegExp(this.value, "gi");
+    const cityN = result.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateN = result.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    return `<li><span>${cityN}, ${stateN}</span><span>${numberWithCommas(result.population)}</span></li>`;
+  });
+  console.log(html);
+  suggestions.innerHTML = html;
+};
+
+textInput.addEventListener('change', displayMatches);
+textInput.addEventListener('keyup', displayMatches);
+
 </script>
 </body>
 </html>
