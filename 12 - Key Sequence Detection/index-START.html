@@ -7,6 +7,22 @@
 </head>
 <body>
 <script>
+const pressedKeys = [];
+const password = 'pierre';
+window.addEventListener('keyup', event => {
+  // console.log(event.key);
+  pressedKeys.push(event.key);
+  // console.log(pressedKeys.length);
+  // console.log(password.length);
+
+  pressedKeys.splice((-password.length - 1), (pressedKeys.length - password.length))
+  console.log(pressedKeys);
+  if (pressedKeys.join('') === password) {
+    console.log('secret found!');
+    cornify_add();
+  }
+})
+
 </script>
 </body>
 </html>
