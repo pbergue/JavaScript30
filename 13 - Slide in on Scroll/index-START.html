@@ -58,6 +58,26 @@
       };
     }
 
+    const imagesSliding = document.querySelectorAll('.slide-in');
+
+  function slideIn(e) {
+    // console.log(window.scrollY);
+    imagesSliding.forEach( image => {
+      const slideInAt = (window.scrollY + window.innerHeight) - image.height / 2
+      const bottomImg = image.offsetTop + image.height;
+
+      const isHalfPast = slideInAt > image.offsetTop;
+      const isScrolledPast = window.scrollY < bottomImg;
+
+      if (isHalfPast && isScrolledPast) {
+        image.classList.add('active');
+      } else {
+        image.classList.remove('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', debounce(slideIn));
   </script>
 
   <style>
@@ -68,11 +88,11 @@
       font-size: 20px;
       font-weight: 200;
     }
-    
+
     body {
       margin: 0;
     }
-    
+
     *, *:before, *:after {
       box-sizing: inherit;
     }
@@ -107,7 +127,7 @@
     .align-left.slide-in {
       transform: translateX(-30%) scale(0.95);
     }
-    
+
     .align-right.slide-in {
       transform: translateX(30%) scale(0.95);
     }
