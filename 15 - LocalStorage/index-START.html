@@ -23,16 +23,81 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
+    <button class="check">Check all</button>
+    <!-- <button class="uncheck">Uncheck all</button> -->
   </div>
 
 <script>
+  const check = document.querySelector('.check');
+  // const uncheck = document.querySelector('.uncheck');
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
 
+  function addingFood(e) {
+    e.preventDefault();
+    const text = this.querySelector('[name="item"]').value;
+    const item = {
+      text,
+      done: false
+    };
+    items.push(item);
+    populateList(items, itemsList)
+    localStorage.setItem('items', JSON.stringify(items));
+    this.reset();
+    // console.log('added food');
+  }
+
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML ="";
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+      <li>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''}/>
+        <label for="item${i}">${plate.text}</label>
+        </li>
+        `;
+      }).join('');
+    // console.log('populated');
+    }
+
+  function toggleDone(e) {
+    const el = e.target;
+    if (!el.matches('input')) return;
+    // console.log(el);
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+    // console.log('toggled');
+  }
+
+  function checkAll(e) {
+    items.map(itemToCheck => itemToCheck.done = "true");
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  // function unchecking(e) {
+  //   items.map(itemToUncheck => {
+  //     console.log(itemToUncheck.done);
+  //     itemToUncheck.done = "false";
+  //     console.log(itemToUncheck.done);
+  //   });
+  //   // console.log(items);
+  //   localStorage.setItem('items', JSON.stringify(items));
+  //   populateList(items, itemsList);
+  //   console.log('unchecked');
+  // }
+
+
+  addItems.addEventListener('submit', addingFood);
+  itemsList.addEventListener('click', toggleDone);
+  check.addEventListener('click', checkAll);
+  // uncheck.addEventListener('click', unchecking);
+  populateList(items, itemsList);
 </script>
 
 
 </body>
 </html>
-
